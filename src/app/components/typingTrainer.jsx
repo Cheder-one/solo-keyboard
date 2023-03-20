@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import SetTimer from "../utils/setTimer";
 
 function TypingTrainer() {
   const [currentWord, setCurrentWord] = useState("");
@@ -20,29 +21,28 @@ function TypingTrainer() {
   ];
   const [availableWords, setAvailableWords] = useState(words);
 
-  const startNewWord = () => {
-    const index = Math.floor(Math.random() * availableWords.length);
-    setCurrentWord(availableWords[index]);
-    setAvailableWords(
-      availableWords.filter((word) => word !== availableWords[index])
-    );
-    setUsedWords((prev) => [...prev, currentWord]);
-  };
-
   useEffect(() => {
-    const wordsInterval = setInterval(startNewWord, 1000);
+    const randomIndx = Math.floor(Math.random() * availableWords.length);
+    const chosenWord = availableWords[randomIndx];
+
+    const wordsInterval = setInterval(() => {
+      setCurrentWord(chosenWord);
+      setAvailableWords(availableWords.filter((word) => word !== chosenWord));
+      setUsedWords((prev) => [...prev, currentWord]);
+    }, 300);
 
     if (usedWords.length > words.length) {
       clearInterval(wordsInterval);
     }
     return () => clearInterval(wordsInterval);
-  });
+  }, [currentWord, usedWords, availableWords, words.length]);
 
   useEffect(() => {
-    document.addEventListener("keyup", (event) => {
-      console.log(event.key);
-    });
-  });
+    const handleKeyDown = (event) => {};
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const numberAttempts = usedWords.length;
 

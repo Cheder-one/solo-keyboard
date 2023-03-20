@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import SetTimer from "../utils/setTimer";
 
 function TypingTrainer() {
   const [currentWord, setCurrentWord] = useState("");
@@ -19,6 +18,7 @@ function TypingTrainer() {
     "developer",
     "javascript",
   ];
+
   const [availableWords, setAvailableWords] = useState(words);
 
   useEffect(() => {
@@ -29,13 +29,13 @@ function TypingTrainer() {
       setCurrentWord(chosenWord);
       setAvailableWords(availableWords.filter((word) => word !== chosenWord));
       setUsedWords((prev) => [...prev, currentWord]);
-    }, 300);
+    }, 1000);
 
     if (usedWords.length > words.length) {
       clearInterval(wordsInterval);
     }
     return () => clearInterval(wordsInterval);
-  }, [currentWord, usedWords, availableWords, words.length]);
+  }, [currentWord, availableWords, usedWords]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {};

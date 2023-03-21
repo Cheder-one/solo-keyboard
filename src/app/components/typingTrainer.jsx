@@ -21,10 +21,10 @@ function TypingTrainer() {
   const [availableWords, setAvailableWords] = useState(words);
 
   const startNewWord = () => {
-    const index = Math.floor(Math.random() * availableWords.length);
-    setCurrentWord(availableWords[index]);
+    const randomIndex = Math.floor(Math.random() * availableWords.length);
+    setCurrentWord(availableWords[randomIndex]);
     setAvailableWords(
-      availableWords.filter((word) => word !== availableWords[index])
+      availableWords.filter((word) => word !== availableWords[randomIndex])
     );
     setUsedWords((prev) => [...prev, currentWord]);
   };

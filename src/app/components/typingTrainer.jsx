@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 function TypingTrainer() {
-  const [currentWord, setCurrentWord] = useState("");
   const [usedWords, setUsedWords] = useState([]);
   const [correct, setCorrect] = useState(0);
   const [issue, setIssue] = useState(0);
@@ -18,31 +17,42 @@ function TypingTrainer() {
     "developer",
     "javascript",
   ];
+
   const [availableWords, setAvailableWords] = useState(words);
 
-  const startNewWord = () => {
-    const randomIndex = Math.floor(Math.random() * availableWords.length);
-    setCurrentWord(availableWords[randomIndex]);
-    setAvailableWords(
-      availableWords.filter((word) => word !== availableWords[randomIndex])
-    );
-    setUsedWords((prev) => [...prev, currentWord]);
-  };
+  const randomIndx = Math.floor(Math.random() * availableWords.length);
+  console.log({ randomIndx });
+  const [currentWord, setCurrentWord] = useState(words[randomIndx]);
 
   useEffect(() => {
-    const wordsInterval = setInterval(startNewWord, 1000);
+    const chosenWord = availableWords[randomIndx];
+
+    const wordsInterval = setInterval(() => {
+      setCurrentWord(chosenWord);
+      setAvailableWords(availableWords.filter((word) => word !== chosenWord));
+      setUsedWords((prev) => [...prev, currentWord]);
+    }, 1000);
 
     if (usedWords.length > words.length) {
       clearInterval(wordsInterval);
     }
     return () => clearInterval(wordsInterval);
-  });
+  }, [currentWord, availableWords, usedWords]);
 
   useEffect(() => {
-    document.addEventListener("keyup", (event) => {
-      console.log(event.key);
-    });
-  });
+    let count = 0;
+    const handleKeyDown = (event) => {
+      if (event.key === currentWord[count]) {
+        setCorrect((prev) => prev + 1);
+        count++;
+      } else {
+        setIssue((prev) => prev + 1);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [currentWord]);
 
   const numberAttempts = usedWords.length;
 
